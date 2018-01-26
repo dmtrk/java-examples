@@ -1,0 +1,13 @@
+version: '3.1'
+
+services:
+  java-examples:
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    image: java-examples
+    ports:
+      - "8888:8888"
+    expose:
+      - "8888"
+    container_name: java-examples
