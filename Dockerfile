@@ -14,6 +14,11 @@ RUN ls -al /tmp/ && gradle clean build
 FROM openjdk:8u151-jre-alpine3.7
 COPY --from=builder /tmp/build/distributions/${APPNAME} /opt/
 COPY docker/tini-static /opt/tini
-RUN  chmod +x /opt/tini && apk --no-cache add ca-certificates
+COPY docker/docker-entrypoint.sh /docker-entrypoint.sh
+RUN apk --no-cache add ca-certificates && \
+    chmod +x /opt/tini && chown -R 65534 && \
+    chmod +x /docker-entrypoint.sh
+
+USER 65534
 WORKDIR /opt/
-CMD ["/opt/tini","--","/opt/run.sh"]
+CMD ["/opt/tini","--","/docker-entrypoint.sh"]
